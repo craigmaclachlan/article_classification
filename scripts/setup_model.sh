@@ -4,8 +4,6 @@ scripts_dir=$(dirname $0)
 
 ${scripts_dir}/get_training_data.sh $PWD/training_data
 
-${scripts_dir}/get_ancillary_data.sh #$PWD/ancil
-
 ${scripts_dir}/process_training_data.py $PWD/training_data $PWD/training_data/articles.csv
 
 ${scripts_dir}/build_model.py $PWD/training_data/articles.csv \

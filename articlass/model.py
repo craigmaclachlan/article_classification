@@ -147,6 +147,7 @@ class ClassifierModel(object):
                            loss='sparse_categorical_crossentropy',
                            metrics=['accuracy'])
         modlog.debug("Compiled the model.")
+        self._defined = True
 
         self.model.summary()
         modlog.info("Tensorflow neural network defined.")
@@ -180,7 +181,7 @@ class ClassifierModel(object):
                               verbose=0
                               )
         end = time.time()
-        self.trained = True
+        self._trained = True
         elapsed = end - start
         modlog.info("Training of model complete.")
         modlog.info("Training took %d seconds." % elapsed)
