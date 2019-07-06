@@ -18,6 +18,7 @@ class ModelConfiguration(object):
 
     Attributes:
         classes - list of categories to classify
+        dirpath - path to the directory containing the model configuration.
         conf_path - path to the configuration file
         model_path - path to write the model to
         fig_path - path to output model fit figure
@@ -36,7 +37,7 @@ class ModelConfiguration(object):
         self.norm = 0.0
         self.terms = []
 
-    def setinfo(self, outputdir, class_list, normfactor, wordlist,
+    def setinfo(self, outputdir, class_list, normfactor, word_list,
                 model_name='classifier_model'):
         """
         Set up the model configuration information.
@@ -45,10 +46,16 @@ class ModelConfiguration(object):
             outputdir - where the model information will be saved.
             class_list - list of categories
             normfactor - the normalisation factor
-            wordlist - list of words which correspond to the input vector
+            word_list - list of words which correspond to the input vector
             model_name - the name of the model (default="classifier_model")
 
         """
+        if not isinstance(class_list, list):
+            raise TypeError("Class list must be of type list.")
+        if not isinstance(word_list, list):
+            raise TypeError("Word list must be of type list.")
+        if not isinstance(normfactor, (int, float)):
+            raise TypeError("normfactor must be a numerical type (int, float).")
         self.classes = class_list
         self.dirpath = os.path.abspath(outputdir)
         self.conf_path = os.path.join(self.dirpath, model_name + '.json')
@@ -58,7 +65,7 @@ class ModelConfiguration(object):
         self.log_path = os.path.join(self.dirpath, logname)
 
         self.norm = float(normfactor)
-        self.terms = wordlist
+        self.terms = word_list
 
     def save(self):
         """
@@ -104,19 +111,19 @@ class ClassifierModel(object):
         n_inputs - number of input features
         n_classes - number of categories
         model - the tensorflow model object
-        trained - has the model been trained yet?
 
     """
     def __init__(self):
         """
-        Create the ClassifierModel class. Define the output paths. Ensure
-        the directory exists.
+        Create the ClassifierModel class. Define the output paths.
 
         """
         self.n_inputs = 0
         self.n_classes = 0
-        self.trained = False
         self.model = None
+        self._defined = False
+        self._trained = False
+
 
     def define(self, n_inputs, n_classes):
         """
@@ -156,6 +163,10 @@ class ClassifierModel(object):
             val_split - how much of the data to use as validation data
 
         """
+        if not self._defined:
+            raise RuntimeError(
+                "Model not yet defined, run ClassifierModel.define()")
+
         self.epochs = nepochs
         self._tensorboard_callback = \
             tf.keras.callbacks.TensorBoard(log_dir=logfile)
@@ -189,7 +200,7 @@ class ClassifierModel(object):
             y - test label data
 
         """
-        if not self.trained:
+        if not self._trained:
             raise RuntimeError(
                 "Model not trained yet. Run ClassifierModel.train().")
         self._test_loss, self._test_acc = self.model.evaluate(x=x, y=y)
@@ -205,7 +216,7 @@ class ClassifierModel(object):
             list of the probabilities of each category
 
         """
-        if not self.trained:
+        if not self._trained:
             raise RuntimeError(
                 "Model not trained yet. Run ClassifierModel.train().")
         return self.model.predict(x=x)
@@ -217,7 +228,7 @@ class ClassifierModel(object):
         Returns:
              string containing training performance
         """
-        if not self.trained:
+        if not self._trained:
             raise RuntimeError(
                 "Model not trained yet. Run ClassifierModel.train().")
         output = "\n\tTraining accuracy = %4.3f" % self._acc[-1]
@@ -233,7 +244,7 @@ class ClassifierModel(object):
         Plot the training performance of the model and save it to a file.
 
         """
-        if not self.trained:
+        if not self._trained:
             raise RuntimeError(
                 "Model not trained yet. Run ClassifierModel.train().")
         epochs_range = range(self.epochs)
@@ -265,7 +276,7 @@ class ClassifierModel(object):
     def save(self, savepath):
         """Save the model for re-use."""
 
-        if not self.trained:
+        if not self._trained:
             raise RuntimeError(
                 "Model not trained yet. Run ClassifierModel.train().")
         self.model.save(savepath)
@@ -294,13 +305,26 @@ def pred2str(predictions, classes, full=True, class_only=False):
     Returns - a string of the predictions.
 
     """
+    if (not isinstance(predictions, list) or
+        not all(isinstance(p, float) for p in predictions)):
+        raise TypeError("predictions must be a numeric list.")
+
+    if not isinstance(classes, list):
+        raise TypeError("classes must be a list.")
+
+    if not len(predictions) == len(classes):
+        raise IndexError("Input variables must be equal lengths.")
+
+    if full and class_only:
+        modlog.warning("Options full and class_only can't both be true."
+                       "The full option takes precedence.")
+
     output = ["%s : %4.3f" % (cls, pred)
               for cls, pred in zip(classes, predictions)]
     output = sorted(output, key=lambda x: float(x.split(':')[1]))
     if full:
         return "\n".join(output)
+    elif class_only:
+        return output[-1].split(' ')[0]
     else:
-        if class_only:
-            return output[-1].split(' ')[0]
-        else:
-            return output[-1]
+        return output[-1]

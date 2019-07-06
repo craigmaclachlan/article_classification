@@ -6,11 +6,8 @@ import tempfile
 import numpy
 import pandas
 import logging
-#import logging.config
 
-#import articlass
-#logging.config.dictConfig(articlass.logging_config)
-#logger = logging.getLogger()
+logger = logging.getLogger()
 
 from articlass.process import TrainingData, ClassFile, WordCountFile, TermsFile
 
