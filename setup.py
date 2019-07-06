@@ -18,5 +18,6 @@ setup(
                       'nltk',
                       'bs4',
                       'matplotlib',
-                      'sklearn'],
+                      'sklearn',
+                      'nose2'],
      )

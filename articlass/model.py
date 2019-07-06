@@ -3,82 +3,12 @@ import datetime
 import os
 import time
 import json
-#import numpy
 import logging
-#import logging.config
+
 import tensorflow as tf
 import matplotlib.pyplot as plt
 
 modlog = logging.getLogger(__name__)
-
-# class Normaliser(object):
-#     """
-#     Read, write and apply the normalisation factor.
-#
-#     Attributes:
-#         filepath - path to the file to read or store the factor
-#         factor - value of the normalisation factor.
-#
-#     """
-#     def __init__(self, filepath):
-#         """
-#         Interface to the class information in the dataset.
-#
-#         Args:
-#             filepath - path to the normalisation file
-#
-#         """
-#         self.filepath = filepath
-#         self.factor = 0
-#
-#     def set(self, norm_factor):
-#         """
-#         Set the normalisation factor. Check that it is sensible.
-#
-#         Args:
-#             norm_factor - the normalisation factor
-#
-#         """
-#         if norm_factor > 0.0:
-#             self.factor = norm_factor
-#         else:
-#             raise ValueError("Normalisation factor must be positive definite.")
-#
-#     def write(self):
-#         """
-#         Write the normalisation factor to file.
-#
-#         """
-#         with open(self.filepath, 'w') as fh:
-#             modlog.debug("Opened file to write norm factor: %s" % self.filepath)
-#             fh.write("%4.3f" % self.factor)
-#         modlog.info("Written factor (%4.3f) to file: %s" % (self.factor,
-#                                                             self.filepath))
-#
-#     def read(self):
-#         """
-#         Read the normalisation factor from file.
-#
-#         """
-#         with open(self.filepath, 'r') as fh:
-#             # Cast as a float to ensure non-integer division later on.
-#             self.factor = float(fh.read().strip())
-#         modlog.info("Read normalisation factor from file: %s" % self.filepath)
-#
-#     def apply(self, array):
-#         """
-#         Normalise an array.
-#
-#         Args:
-#             array - numpy array to be normalised
-#
-#         Returns:
-#             normalised array.
-#
-#         """
-#         if not isinstance(array, numpy.ndarray):
-#             raise NotImplementedError("Can only normalise numpy arrays.")
-#         return array/self.factor
 
 
 class ModelConfiguration(object):
@@ -364,7 +294,8 @@ def pred2str(predictions, classes, full=True, class_only=False):
     Returns - a string of the predictions.
 
     """
-    output = ["%s : %4.3f" % (cls, pred) for cls, pred in zip(classes, predictions)]
+    output = ["%s : %4.3f" % (cls, pred)
+              for cls, pred in zip(classes, predictions)]
     output = sorted(output, key=lambda x: float(x.split(':')[1]))
     if full:
         return "\n".join(output)

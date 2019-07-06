@@ -5,7 +5,6 @@ use in Tensorflow.
 
 """
 import argparse
-#import logging
 import logging.config
 
 import articlass

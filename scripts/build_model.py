@@ -71,5 +71,3 @@ nn_model.export_plot(model_cfg.fig_path)
 # Save the model and config so that it can be used again later.
 model_cfg.save()
 nn_model.save(model_cfg.model_path)
-
-

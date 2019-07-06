@@ -46,7 +46,8 @@ def html2text(html):
 
 def count_terms(counts, terms):
     """
-    For each word in a given list, return the number of times it appears in count.
+    For each word in a given list, return the number of times it
+    appears in count.
 
     The original training data had low frequency words filtered. Any
     words with counts less than 3 were not included. We need to do the

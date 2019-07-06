@@ -8,6 +8,7 @@ logger = logging.getLogger()
 
 from articlass.text import load_words, html2text, count_terms
 
+
 class TestLoadWords(unittest.TestCase):
     """Test the load of a list of words."""
     def setUp(self):
@@ -54,7 +55,7 @@ class TestHtml2Text(unittest.TestCase):
 
     def test_good_case(self):
         html = ("<body>Filtered text<p>Line 1</p><p>Line 2</p>"
-               "<p class=skip>Line X</p>")
+                "<p class=skip>Line X</p>")
         expected = "Line 1 Line 2"
         result = html2text(html)
         self.assertEqual(expected, result)

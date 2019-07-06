@@ -26,13 +26,12 @@ class TrainingData(object):
 
     Attributes:
         dataframe - pandas dataframe containing the words counts and categories
-        norm_factor - the maximum value of the word counts in the dataframe.
         feature_max_value - the maximum value of all the word counts.
+        feature_names - list of words corresponding to the feature names
 
     """
     def __int__(self):
         self.dataframe = None
-        self.norm_factor = 0
 
     def load_raw(self, datapath):
         """
@@ -113,13 +112,13 @@ class TrainingData(object):
         self.dataframe.to_csv(filepath, index=False)
         modlog.info("DataFrame written to file: %s" % filepath)
 
-    def train_test_split(self, test_frac=0.15):
+    def train_test_split(self, test_frac=0.15, shuffle=True):
         """
         Split the data into training and test (numpy) arrays.
 
         Args:
             test_frac - the fraction of the training data to set aside
-                        for the test set
+                        for the test set.
 
         Returns:
             tuple of:
@@ -129,6 +128,10 @@ class TrainingData(object):
               test labels)
 
         """
+        # The sklearn function can take an integer number of cases in the test
+        # set but we prevent that here. Also
+        if test_frac >= 1.0:
+            raise ValueError("Fraction of test data must be < 1")
         labels = self.dataframe['_labels_class_']
         features = self.dataframe.drop(columns=['_labels_class_'])
         modlog.debug("Set up labels and features.")
@@ -137,7 +140,7 @@ class TrainingData(object):
             sklearn.model_selection.train_test_split(features,
                                                      labels,
                                                      test_size=test_frac,
-                                                     shuffle=True)
+                                                     shuffle=shuffle)
         modlog.info("Split training data (ratio: %4.3f)" % test_frac)
         train_x = train_x.values
         test_x = test_x.values
@@ -230,7 +233,8 @@ class ClassFile(object):
         if not len(class_list) == self.number:
             modlog.debug("Length class list: %d" % len(class_list))
             modlog.debug("Defined number of Classes : %d" % self.number)
-            raise ValueError("Number of classes not correctly defined in file.")
+            raise ValueError(
+                "Number of classes not correctly defined in file.")
         self.classes = class_list
         modlog.info("Loaded class information.")
 
@@ -241,6 +245,8 @@ class ClassFile(object):
         """
         if self.classes == '?':
             self.get_classes()
+        # Forcing the type to be integer means it should not allow any
+        # incomplete or erroneous rows.
         labels = pandas.read_csv(self.filepath, sep=" ", dtype=int,
                                  names=['Name', 'NaturalClasses'], comment='%')
         self.labels = labels['NaturalClasses'].values
