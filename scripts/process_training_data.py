@@ -8,13 +8,12 @@ import argparse
 import logging.config
 
 import articlass
-
 logging.config.dictConfig(articlass.logging_config)
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logger.debug("Logger set up.")
 
 import articlass.process
-import articlass.model
+
 
 parser = argparse.ArgumentParser(
     description='Process the input data from the BBC into a format (CSV) '

@@ -5,10 +5,10 @@ import time
 import json
 import logging
 
+modlog = logging.getLogger(__name__)
+
 import tensorflow as tf
 import matplotlib.pyplot as plt
-
-modlog = logging.getLogger(__name__)
 
 
 class ModelConfiguration(object):

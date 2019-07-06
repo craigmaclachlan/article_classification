@@ -7,8 +7,10 @@ import argparse
 import logging.config
 
 import articlass
+
+# TODO: Tensorflow is mucking up the logging. Needs fixing
 logging.config.dictConfig(articlass.logging_config)
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 logger.debug("Logger set up.")
 
 import articlass.model

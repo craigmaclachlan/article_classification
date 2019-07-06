@@ -2,7 +2,9 @@
 
 import bs4
 import collections
+import logging
 
+modlog = logging.getLogger(__name__)
 
 def load_words(path):
     """
