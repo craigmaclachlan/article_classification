@@ -1,4 +1,9 @@
 #!/bin/bash
+#
+# Run the scripts to retrieve and process data, then train a model
+#
+# Usage: setup_model.sh
+#
 
 scripts_dir=$(dirname $0)
 

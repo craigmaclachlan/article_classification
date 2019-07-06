@@ -3,6 +3,7 @@ import datetime
 import os
 import time
 import json
+import numpy
 import logging
 
 modlog = logging.getLogger(__name__)
@@ -287,7 +288,7 @@ class ClassifierModel(object):
         """Load a pre-trained model."""
 
         self.model = tf.keras.models.load_model(loadpath)
-        self.trained = True
+        self._trained = True
         modlog.info("Loaded model from file.")
 
 
@@ -306,8 +307,8 @@ def pred2str(predictions, classes, full=True, class_only=False):
     Returns - a string of the predictions.
 
     """
-    if (not isinstance(predictions, list) or
-        not all(isinstance(p, float) for p in predictions)):
+    if (not isinstance(predictions, (list, numpy.ndarray)) or
+        not all(numpy.isreal(predictions))):
         raise TypeError("predictions must be a numeric list.")
 
     if not isinstance(classes, list):

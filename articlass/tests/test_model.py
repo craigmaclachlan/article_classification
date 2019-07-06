@@ -110,10 +110,6 @@ class TestModelCfg(unittest.TestCase):
 class TestClassifierModel(unittest.TestCase):
     """Test the class wrapping the model training and execution."""
 
-    #def setUp(self) -> None:
-
-    #def tearDown(self) -> None:
-
     def test_not_yet_defined(self):
         model = ClassifierModel()
         with self.assertRaises(RuntimeError):
@@ -148,7 +144,7 @@ class TestClassifierModel(unittest.TestCase):
 class TestPredPrint(unittest.TestCase):
 
     def setUp(self):
-        self.predictions = [0.1, 0.18995, 0.01005, 0.69]
+        self.predictions = numpy.array([0.1, 0.18995, 0.01005, 0.69])
         self.classes = ['cat', 'dog', 'bear', 'tiger']
 
     def test_normal(self):
