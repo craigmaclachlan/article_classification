@@ -1,6 +1,6 @@
 # ArtiClass: Article classifying
 
-This package automates the building of a neural network 
+This package simplifies the building of a neural network 
 classifier and allows article URLs to be classified.
 
 ## Overview
@@ -19,7 +19,7 @@ by using the following command:
 `python setup.py install`
 
 ## Training Data
-The training data is a dataset made available by the BBC, and can be found here: 
+The training data originated from BBC News, and can be found here: 
 http://mlg.ucd.ie/datasets/bbc.html
 
 There are two datasets: general news articles and sport news articles. Both 
@@ -37,10 +37,12 @@ the data.
 For use in [Tensorflow](https://www.tensorflow.org/) the preprocessed data is 
 processed into a CSV file using the [pandas library](https://pandas.pydata.org/).
 
-The word count is an sparse matrix format, this is converted to a dense numeric
-array with column names relating to the predefined terms. A column of the 
-categories is added to the table. This table is exported to CSV and contains 
-all of the relevant information.
+The word count is in a sparse matrix format, this is converted to a dense 
+numeric table with column names relating to the predefined terms. A column of 
+the "labels" is added to the table. This table is exported to CSV and contains 
+all of the required information to train the model. Some information in the 
+"classes" file is input to the model training script, this allows a meaningful
+display of any predicted results.
 
 The processing of the data can be run like this:
 
@@ -72,7 +74,7 @@ tensorboard application to be run.
 
 The model is saved to file along with a configuration file which
 contains all the information required to load and apply the model.
-The configuration file (JSON format) contains paths to the model save,  
+The configuration file (JSON format) contains paths to the model save, 
 paths to the log outputs, a word count normalisation factor, list of categories, 
 and the list of words that need to be counted to create the input to the model.
 
@@ -85,18 +87,20 @@ The pre-trained model can be applied to new data using the script:
 
 The script has two main parts:
 #### Text processing
-Retrieve the data from the URL and convert it to neural network model input 
-data. The html source of the URL is retrieved and the HTML tags are filtered
-out to leave the article text. The article text is then "stemmed"; this is the
-process of removing the endings of words to leave the "root" of a word. For 
-example "important" and "importance" should resolve to the same root.
+Retrieve the data from the URL and convert it to input data for the neural 
+network model. The html source of the URL is retrieved and the HTML tags are 
+filtered out leaving the article text. The article text is then "stemmed"; 
+this is the process of removing the endings of words to leave the "root" of a 
+word. For example "important" and "importance" should resolve to the same root. 
+The [Porter Stemming](https://tartarus.org/martin/PorterStemmer/) algorithm 
+from [NLTK](https://www.nltk.org/) is used.
 
 Filtering of "stopwords" (common words not to count) is applied to the 
 training dataset. However, this is not applied to the prediction of new data.
 It is crucial that the words counted here are exactly the same set as the model
-was trained on, otherwise the model will the work.
+was trained on, otherwise the model will not work.
 
-The low frequency words (1 or 2 instances) are removed because the model has 
+The low frequency words (1 or 2 instances) are removed. The model has 
 not been exposed to these values, and may give unexpected results when given 
 these values.
  
