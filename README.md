@@ -80,7 +80,7 @@ and the list of words that need to be counted to create the input to the model.
 ## Classifier Application
 The pre-trained model can be applied to new data using the script:
 
-`scripts/classify_url.py model_conf.json https://www.bbc.co.uk/news/uk-scotland-edinburgh-east-fife-48885287
+`scripts/classify_url.py model_conf.json https://www.bbc.co.uk/sport/tennis/48894313
 `
 
 The script has two main parts:
@@ -105,13 +105,18 @@ The count of the relevant words in the article is passed to the pre-trained
 model. The model returns the probability of the article being in each class.
 The full list of probabilities is written to the log (default stdout). The 
 article URL and the most likely class is always printed to stdout. For example:
->  tech : 0.039\
->  sport : 0.168\
->  politics : 0.299\
->  entertainment : 0.485\
->  https://www.bbc.co.uk/news/uk-scotland-edinburgh-east-fife-48885287 : entertainment
+> tech : 0.000\
+> business : 0.002\
+> politics : 0.005\
+> entertainment : 0.025\
+> sport : 0.968\
+> https://www.bbc.co.uk/sport/tennis/48894313 : sport
 
 
-## Future Work
+## Unit tests
+The articlass module contains unit tests. These can be run by executing
+the following command in the root of the project:
+
+`nose2`
 
 

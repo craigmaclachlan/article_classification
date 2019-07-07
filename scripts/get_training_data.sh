@@ -12,7 +12,7 @@ if [[ ! -d ${output_dir} ]]; then
 fi
 
 data_url="http://mlg.ucd.ie/files/datasets/bbc.zip"
-filename=$(basename data_url)
+filename=$(basename ${data_url})
 
 
 curl -o ${output_dir}/${filename} ${data_url}

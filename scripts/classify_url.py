@@ -50,7 +50,7 @@ logger.info("Number of countable words = %d" % len(word_list))
 # The Counter class from collections is essentially a dictionary
 # where the values are the counts of each key in the original list.
 counts = collections.Counter(countable_words)
-
+logger.info("Words counted")
 
 model_cfg = articlass.model.ModelConfiguration()
 model_cfg.load(args.model_config)
@@ -60,7 +60,9 @@ model_cfg.load(args.model_config)
 # and count how many were in the article.
 
 # Calculate the input for the model - counts of the pre-defined terms.
+logger.info("Calculating model input.")
 model_input = articlass.text.count_terms(counts, model_cfg.terms)
+logger.info("Model input calculated.")
 
 # Load the model
 nn_model = articlass.model.ClassifierModel()
@@ -74,7 +76,9 @@ model_input = numpy.array(model_input).reshape(1, len(model_input))
 model_input = model_input / model_cfg.norm
 
 # Make the prediction
+logger.info("Making prediction.")
 predictions = nn_model.predict(x=model_input)[0]
+logger.info("Prediction complete.")
 
 logger.info(
     articlass.model.pred2str(predictions, model_cfg.classes, full=True))
