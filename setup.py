@@ -36,7 +36,7 @@ setup(
     author_email='cs.maclachlan@gmail.com',
     packages=['articlass'],
     python_requires='>=3.7',
-    install_requires=['tensorflow==1.14',
+    install_requires=['tensorflow==1.15.0',
                       'numpy',
                       'scipy',
                       'pandas',
